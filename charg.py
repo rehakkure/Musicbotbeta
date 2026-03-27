@@ -22,11 +22,11 @@ YDL_OPTIONS = {
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
-    await message.answer("Привет! Введи название трека, и я найду его для тебя.")
+    await message.answer("Привет! Введи название трека, который хочешь скачать.")
 
 @dp.message(F.text)
 async def search_music(message: types.Message):
-    msg = await message.answer("🔍 Ищу варианты...")
+    msg = await message.answer("Ищу варианты...")
     
     with YoutubeDL(YDL_OPTIONS) as ydl:
         try:
@@ -34,7 +34,7 @@ async def search_music(message: types.Message):
             entries = info.get('entries', [])
 
             if not entries:
-                await msg.edit_text("Ничего не найдено 😔")
+                await msg.edit_text("Ничего не найдено.")
                 return
 
             builder = InlineKeyboardBuilder()
@@ -54,10 +54,10 @@ async def download_music(callback: types.CallbackQuery):
     video_id = callback.data.split("|")[1]
     url = f"https://www.youtube.com/watch?v={video_id}"
     
-    await callback.answer("Начинаю загрузку... ⏳")
-    status_msg = await callback.message.answer("📥 Загружаю и обрабатываю MP3...")
+    await callback.answer("Начинаю загрузку... ")
+    status_msg = await callback.message.answer("Загружаю и обрабатываю MP3...")
     
-    file_path = f"{video_id}" # Базовое имя файла
+    file_path = f"{video_id}"
     
     download_opts = {
         'format': 'bestaudio/best',
@@ -71,21 +71,18 @@ async def download_music(callback: types.CallbackQuery):
     }
 
     try:
-        # Скачивание
         with YoutubeDL(download_opts) as ydl:
             ydl.download([url])
         
         final_file = f"{file_path}.mp3"
         
         if os.path.exists(final_file):
-            # Небольшая пауза, чтобы файл "отпустило" после конвертации
             await asyncio.sleep(1) 
             
             audio = types.FSInputFile(final_file)
             await bot.send_audio(chat_id=callback.message.chat.id, audio=audio)
             await status_msg.delete()
             
-            # Удаляем файл после отправки
             os.remove(final_file)
         else:
             await status_msg.edit_text("Ошибка: файл не был создан.")
@@ -96,7 +93,6 @@ async def download_music(callback: types.CallbackQuery):
         if os.path.exists(f"{file_path}.mp3"): os.remove(f"{file_path}.mp3")
 
 async def main():
-    # Удаляем вебхуки, чтобы не было ошибки Conflict
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 

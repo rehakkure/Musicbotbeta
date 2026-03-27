@@ -11,7 +11,7 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 # Укажи здесь точный путь к папке bin (БЕЗ кавычек внутри строки)
-FFMPEG_PATH = r'C:\Users\hakku\OneDrive\Desktop\ffmpeg\ffmpeg-8.0.1-essentials_build\bin'
+FFMPEG_PATH = r'\bin'
 
 YDL_OPTIONS = {
     'format': 'bestaudio/best',

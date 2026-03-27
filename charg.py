@@ -6,7 +6,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from yt_dlp import YoutubeDL
 
 # --- НАСТРОЙКИ ---
-TOKEN = '8797737257:AAFB5JwyKdNZLnUUXUbZFQXQ4JOJf8bGXl8'
+TOKEN = 'your_token'
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
